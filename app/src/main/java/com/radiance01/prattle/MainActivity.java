@@ -7,15 +7,19 @@ import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.transition.Explode;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import java.util.TimerTask;
 
+import maes.tech.intentanim.CustomIntent;
+
 public class MainActivity extends AppCompatActivity {
 
-    ConstraintLayout layout;
-    Boolean streach = true;
+    TextView prattle;
+    TextView under_text;
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,23 +27,14 @@ public class MainActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
-        layout = findViewById(R.id.layout);
-
-        new CountDownTimer(5000, 1000) {
+        prattle = findViewById(R.id.prattle);
+        under_text = findViewById(R.id.under_text);
+        new CountDownTimer(3000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
-
-                if(streach)
-                {
-                    layout.animate().scaleXBy((float) 0.08).scaleYBy((float) 0.08).setDuration(1000);
-                    streach = false;
-                }
-                else
-                {
-                    layout.animate().scaleXBy((float) -0.05).scaleYBy((float) -0.05).setDuration(1500);
-                    streach = true;
-                }
+                prattle.animate().alphaBy(1).setDuration(2000);
+                under_text.animate().alphaBy(1).setDuration(2000);
             }
 
             @Override
@@ -47,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(getApplicationContext(),LoginActivity.class);
                 startActivity(intent);
-                overridePendingTransition(R.anim.anim, R.anim.anim);
+                CustomIntent.customType(MainActivity.this,"bottom-to-up");
             }
         }.start();
 
