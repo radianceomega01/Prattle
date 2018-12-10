@@ -1,4 +1,5 @@
 package com.radiance01.prattle;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -34,6 +35,7 @@ public class SignupActivity extends AppCompatActivity{
     String password;
     Button signup;
     ConstraintLayout layout;
+    ProgressDialog dialog;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -116,6 +118,12 @@ public class SignupActivity extends AppCompatActivity{
                     return;
                 }
                  else {
+                    dialog = new ProgressDialog(SignupActivity.this);
+                    dialog.setMessage("Please wait.");
+                    dialog.setTitle("Signing Up");
+                    dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                    dialog.setIndeterminate(true);
+                    dialog.show();
                     mAuth.createUserWithEmailAndPassword(text_email.getText().toString(), text_password.getText().toString())
 
                             .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
@@ -125,10 +133,12 @@ public class SignupActivity extends AppCompatActivity{
                                         // Sign in success, update UI with the signed-in user's information
                                         FirebaseUser user = mAuth.getCurrentUser();
                                         Snackbar.make(layout, "Signup Successfull!", Snackbar.LENGTH_SHORT).show();
+                                        dialog.dismiss();
 
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         Snackbar.make(layout, "Email is already registered!", Snackbar.LENGTH_SHORT).show();
+                                        dialog.dismiss();
                                     }
                                 }
                             });
