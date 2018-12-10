@@ -1,13 +1,10 @@
 package com.radiance01.prattle;
-
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -21,7 +18,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
-import java.util.regex.Pattern;
 
 import maes.tech.intentanim.CustomIntent;
 
@@ -53,9 +49,6 @@ public class SignupActivity extends AppCompatActivity{
         firstname = findViewById(R.id.first_name);
         lastname = findViewById(R.id.last_name);
 
-        emails = text_email.getText().toString();
-        password = text_password.getText().toString();
-
         signup = findViewById(R.id.signup_button);
 
         layout.setOnClickListener(new View.OnClickListener() {
@@ -86,13 +79,13 @@ public class SignupActivity extends AppCompatActivity{
                     lastname.requestFocus();
                     return;
                 }
-                else if(emails.isEmpty())
+                else if(text_email.getText().toString().isEmpty())
                 {
                     text_email.setError("Email is required");
                     text_email.requestFocus();
                     return;
                 }
-                else if(password.isEmpty())
+                else if(text_password.getText().toString().isEmpty())
                 {
                     text_password.setError("Password is required");
                     text_password.requestFocus();
@@ -104,7 +97,7 @@ public class SignupActivity extends AppCompatActivity{
                     repassword.requestFocus();
                     return;
                 }
-                else if(!Patterns.EMAIL_ADDRESS.matcher(emails.trim()).matches())
+                else if(!Patterns.EMAIL_ADDRESS.matcher(text_email.getText().toString().trim()).matches())
                 {
                     text_email.setError("Invalid Email");
                     text_email.requestFocus();
@@ -123,9 +116,9 @@ public class SignupActivity extends AppCompatActivity{
                     return;
                 }
                  else {
-                    mAuth.createUserWithEmailAndPassword(emails, password)
+                    mAuth.createUserWithEmailAndPassword(text_email.getText().toString(), text_password.getText().toString())
 
-                            .addOnCompleteListener((Activity) getApplicationContext(), new OnCompleteListener<AuthResult>() {
+                            .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                                 @Override
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
@@ -135,8 +128,7 @@ public class SignupActivity extends AppCompatActivity{
 
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Snackbar.make(layout, "Signup Failed, try again later!", Snackbar.LENGTH_SHORT).show();
-                                        Log.v("exception",task.getException().getMessage());
+                                        Snackbar.make(layout, "Email is already registered!", Snackbar.LENGTH_SHORT).show();
                                     }
                                 }
                             });

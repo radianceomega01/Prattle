@@ -5,8 +5,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Patterns;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -23,6 +23,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.Objects;
 
 import maes.tech.intentanim.CustomIntent;
 
@@ -42,6 +44,20 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login_main);
+
+        findViewById(R.id.main_layout).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager inputMethodManager = (InputMethodManager)getSystemService(INPUT_METHOD_SERVICE);
+                if(inputMethodManager != null)
+                {
+                    if(inputMethodManager.isActive())
+                    {
+                        inputMethodManager.hideSoftInputFromWindow(Objects.requireNonNull(getCurrentFocus()).getWindowToken(),0);
+                    }
+                }
+            }
+        });
 
         progressBar = findViewById(R.id.progressBar);
         // Configure Google Sign In
@@ -68,17 +84,33 @@ public class LoginActivity extends AppCompatActivity {
                     email.requestFocus();
                     return;
                 }
-                else if(!Patterns.EMAIL_ADDRESS.matcher(email.getText().toString().trim()).matches())
-                {
-                    email.setError("Invalid Email type");
-                    email.requestFocus();
-                    return;
-                }
+
                 else if(password.getText().toString().isEmpty())
                 {
                     password.setError("Password is required");
                     password.requestFocus();
                     return;
+                }
+                else
+                {
+                    progressBar.setVisibility(View.VISIBLE);
+                    auth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
+                            .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    if (task.isSuccessful()) {
+                                        // Sign in success, update UI with the signed-in user's information
+                                        FirebaseUser user = auth.getCurrentUser();
+                                        progressBar.setVisibility(View.GONE);
+                                        Snackbar.make(findViewById(R.id.main_layout),"Login Successful!",Snackbar.LENGTH_SHORT).show();
+                                    } else {
+                                        // If sign in fails, display a message to the user.
+                                        progressBar.setVisibility(View.GONE);
+                                        Snackbar.make(findViewById(R.id.main_layout),"Invalid EmailId or Password!",Snackbar.LENGTH_SHORT).show();
+
+                                    }
+                                }
+                            });
                 }
             }
         });
@@ -108,9 +140,9 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            progressBar.setVisibility(View.GONE);
                             if(auth.getCurrentUser() != null)
                             {
                                 Snackbar.make(findViewById(R.id.main_layout), "Already Logged in!", Snackbar.LENGTH_SHORT).show();
