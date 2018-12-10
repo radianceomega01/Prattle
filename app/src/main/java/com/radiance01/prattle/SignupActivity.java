@@ -132,12 +132,12 @@ public class SignupActivity extends AppCompatActivity{
                                     if (task.isSuccessful()) {
                                         // Sign in success, update UI with the signed-in user's information
                                         FirebaseUser user = mAuth.getCurrentUser();
-                                        Snackbar.make(layout, "Signup Successfull!", Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(findViewById(R.id.coordinator_layout), "Signup Successfull!", Snackbar.LENGTH_SHORT).show();
                                         dialog.dismiss();
 
                                     } else {
                                         // If sign in fails, display a message to the user.
-                                        Snackbar.make(layout, "Email is already registered!", Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(findViewById(R.id.coordinator_layout), "Email is already registered!", Snackbar.LENGTH_SHORT).show();
                                         dialog.dismiss();
                                     }
                                 }

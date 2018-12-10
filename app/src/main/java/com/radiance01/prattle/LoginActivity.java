@@ -102,11 +102,11 @@ public class LoginActivity extends AppCompatActivity {
                                         // Sign in success, update UI with the signed-in user's information
                                         FirebaseUser user = auth.getCurrentUser();
                                         progressBar.setVisibility(View.GONE);
-                                        Snackbar.make(findViewById(R.id.main_layout),"Login Successful!",Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(findViewById(R.id.coordinator_layout),"Login Successful!",Snackbar.LENGTH_SHORT).show();
                                     } else {
                                         // If sign in fails, display a message to the user.
                                         progressBar.setVisibility(View.GONE);
-                                        Snackbar.make(findViewById(R.id.main_layout),"Invalid EmailId or Password!",Snackbar.LENGTH_SHORT).show();
+                                        Snackbar.make(findViewById(R.id.coordinator_layout),"Invalid EmailId or Password!",Snackbar.LENGTH_SHORT).show();
 
                                     }
                                 }
@@ -145,15 +145,15 @@ public class LoginActivity extends AppCompatActivity {
                             // Sign in success, update UI with the signed-in user's information
                             if(auth.getCurrentUser() != null)
                             {
-                                Snackbar.make(findViewById(R.id.main_layout), "Already Logged in!", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(findViewById(R.id.coordinator_layout), "Already Logged in!", Snackbar.LENGTH_SHORT).show();
                             }
                             else {
                                 FirebaseUser user = auth.getCurrentUser();
-                                Snackbar.make(findViewById(R.id.main_layout), "Login Successfull.", Snackbar.LENGTH_SHORT).show();
+                                Snackbar.make(findViewById(R.id.coordinator_layout), "Login Successfull.", Snackbar.LENGTH_SHORT).show();
                             }
                         } else {
                             // If sign in fails, display a message to the user.
-                            Snackbar.make(findViewById(R.id.main_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
+                            Snackbar.make(findViewById(R.id.coordinator_layout), "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
 
                         }
                     }
@@ -173,9 +173,15 @@ public class LoginActivity extends AppCompatActivity {
                 firebaseAuthWithGoogle(account);
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
-                Snackbar.make(findViewById(R.id.main_layout), "Google sign in failed!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.coordinator_layout), "Google sign in failed!", Snackbar.LENGTH_SHORT).show();
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
     }
 
 }
